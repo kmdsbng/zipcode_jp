@@ -63,11 +63,46 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var request = __webpack_require__(2);
+
+var ZipCodeJp = {};
+
+ZipCodeJp.setZipCodeBaseUrl = function (url) {
+  ZipCodeJp.zip_code_base_url = url;
+};
+
+// zipCode: zip code string.
+// cb : (err, addresses) => {...}
+ZipCodeJp.getAddressesOfZipCode = function (zipCode, cb) {
+  var prefix = zipCode.slice(0, 3);
+  request.get(ZipCodeJp.zip_code_base_url + '/' + prefix + '/' + zipCode + '.json').end(function (err, res) {
+    if (err) {
+      if (err.status === 404) {
+        cb(null, []);
+      } else {
+        cb(err, []);
+      }
+    } else {
+      cb(null, res.body);
+    }
+  });
+};
+
+ZipCodeJp.setZipCodeBaseUrl('/zip_code');
+window.ZipCodeJp = ZipCodeJp;
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports) {
 
 /**
@@ -86,7 +121,7 @@ module.exports = isObject;
 
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -105,7 +140,7 @@ if (typeof window !== 'undefined') { // Browser window
 
 var Emitter = __webpack_require__(3);
 var RequestBase = __webpack_require__(5);
-var isObject = __webpack_require__(0);
+var isObject = __webpack_require__(1);
 var isFunction = __webpack_require__(4);
 var ResponseBase = __webpack_require__(6);
 var shouldRetry = __webpack_require__(7);
@@ -1025,36 +1060,6 @@ request.put = function(url, data, fn){
 
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var request = __webpack_require__(1);
-
-var ZipCodeJp = {};
-
-// zipCode: zip code string.
-// cb : (err, addresses) => {...}
-ZipCodeJp.getAddressesOfZipCode = function (zipCode, cb) {
-  var prefix = zipCode.slice(0, 3);
-  request.get('/zip_code/' + prefix + '/' + zipCode + '.json').end(function (err, res) {
-    if (err) {
-      if (err.status === 404) {
-        cb(null, []);
-      } else {
-        cb(err, []);
-      }
-    } else {
-      cb(null, res.body);
-    }
-  });
-};
-
-window.ZipCodeJp = ZipCodeJp;
-
-/***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1234,7 +1239,7 @@ Emitter.prototype.hasListeners = function(event){
  * @return {Boolean}
  * @api private
  */
-var isObject = __webpack_require__(0);
+var isObject = __webpack_require__(1);
 
 function isFunction(fn) {
   var tag = isObject(fn) ? Object.prototype.toString.call(fn) : '';
@@ -1251,7 +1256,7 @@ module.exports = isFunction;
 /**
  * Module of mixed-in functions shared between node and client code
  */
-var isObject = __webpack_require__(0);
+var isObject = __webpack_require__(1);
 
 /**
  * Expose `RequestBase`.

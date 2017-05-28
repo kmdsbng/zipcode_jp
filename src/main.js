@@ -2,12 +2,16 @@ const request = require('superagent');
 
 const ZipCodeJp = {}
 
+ZipCodeJp.setZipCodeBaseUrl = (url) => {
+  ZipCodeJp.zip_code_base_url = url;
+};
+
 // zipCode: zip code string.
 // cb : (err, addresses) => {...}
 ZipCodeJp.getAddressesOfZipCode = (zipCode, cb) => {
   const prefix = zipCode.slice(0, 3);
   request
-    .get(`/zip_code/${prefix}/${zipCode}.json`)
+    .get(`${ZipCodeJp.zip_code_base_url}/${prefix}/${zipCode}.json`)
     .end((err, res) => {
       if (err) {
         if (err.status === 404) {
@@ -21,6 +25,7 @@ ZipCodeJp.getAddressesOfZipCode = (zipCode, cb) => {
     });
 }
 
+ZipCodeJp.setZipCodeBaseUrl('/zip_code');
 window.ZipCodeJp = ZipCodeJp;
 
 
