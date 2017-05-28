@@ -7,13 +7,13 @@ You can setup your own database/API on your Web storage.
 ## How to setup.
 
 * Clone this repository.
-* Publish /data directory.
+* Publish /docs directory.
 
 
 ## Directory structure
 
 ```
-data/
+docs/
   zip_code/
     001/
       0010000.json

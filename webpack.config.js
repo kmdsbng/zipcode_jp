@@ -8,7 +8,7 @@ module.exports = {
   output: {
     filename: 'api.js',
     //chunkFilename: '[id].chunk.js',
-    path: __dirname + '/data',
+    path: __dirname + '/docs',
     publicPath: '/',
     sourceMapFilename: "api.map"
   },
