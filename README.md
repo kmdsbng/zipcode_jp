@@ -32,8 +32,10 @@ data/
 </script>
 ```
 
+## License
+MIT
 
-## Contribute
+## Thanks
 zipcode_jp uses z-ken-all.csv of zipcloud. http://zipcloud.ibsnet.co.jp/
 
 
