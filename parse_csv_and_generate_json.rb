@@ -77,7 +77,7 @@ end
 
 def main(filename, data_dir)
   rows = load_zip_code_rows(filename)
-  rows = rows.sort_by(&:zip_code)
+  rows = rows.sort_by {|row| [row.zip_code.to_s, row.prefecture_name_kana.to_s, row.city_name_kana.to_s, row.town_name_kana.to_s]}
   rows = rows.reject {|row|
     row.obsolete?
   }
