@@ -33,6 +33,10 @@ def main
   system('unzip', '-o', 'x-ken-all.zip')
 
   FileUtils.rm('x-ken-all.zip')
+
+  system('git', 'add', '.')
+  system('git', 'commit', '-a', '-m', 'update data')
+  system('git', 'push', 'origin', 'master')
 end
 
 case $PROGRAM_NAME
