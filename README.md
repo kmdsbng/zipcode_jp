@@ -28,7 +28,8 @@ docs/
 <script type="text/javascript" src="https://your.api.server/api.js"></script>
 
 <script type="text/javascript">
-  ZipCodeJp.getAddressesOfZipCode('6000000', function(err, res) {console.log(err); console.log(res)})
+  ZipCodeJp.setZipCodeBaseUrl('https://your.api.server/zip_code');
+  ZipCodeJp.getAddressesOfZipCode('6000000', function(err, res) {console.log(err); console.log(res)});
 </script>
 ```
 
