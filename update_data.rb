@@ -14,7 +14,6 @@ def main
   doc = Nokogiri::HTML.parse(html, nil, charset)
   
   dl_entry_node = doc.xpath('//div[@class="dlEntry"]')[2]
-  p dl_entry_node
   url = dl_entry_node.css('div[class="dlButton"] a').attribute('href').value
   puts url
 
