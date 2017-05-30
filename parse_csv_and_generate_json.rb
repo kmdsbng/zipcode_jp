@@ -26,7 +26,7 @@ end
 # >> ["01101", "060  ", "0600000", "ﾎｯｶｲﾄﾞｳ", "ｻｯﾎﾟﾛｼﾁｭｳｵｳｸ", "", "北海道", "札幌市中央区", "", "0", "0", "0", "0", "0", "0"]
 class ZipCodeRow < Struct.new(
   :line_no,
-  :jis_code, :old_zip_code, :zip_code, :prefecture_name_kana, :city_name_kana, :town_name_kana, :prefecture_name, :city_name, :town_name,
+  :city_jis_code, :old_zip_code, :zip_code, :prefecture_name_kana, :city_name_kana, :town_name_kana, :prefecture_name, :city_name, :town_name,
   :has_some_zip_codes, :banti_by_koaza, :has_chome, :has_some_towns, :update_reason_code, :change_reason_code)
   def initialize(*argv)
     super
@@ -43,8 +43,8 @@ class ZipCodeRow < Struct.new(
   end
 
   def check_jis_code!
-    if jis_code.to_s !~ /\A[0-9]{5}\z/
-      raise "[#{line_no}] Invalid JIS code: #{jis_code.pretty_inspect}"
+    if city_jis_code.to_s !~ /\A[0-9]{5}\z/
+      raise "[#{line_no}] Invalid JIS code: #{city_jis_code.pretty_inspect}"
     end
   end
 
@@ -73,6 +73,10 @@ class ZipCodeRow < Struct.new(
   def zip_code_vo
     ZipCodeVo.new(zip_code)
   end
+
+  def prefecture_jis_code
+    city_jis_code[0..1]
+  end
 end
 
 def main(filename, data_dir)
@@ -100,7 +104,8 @@ end
 def make_zip_json(rows)
   zip_code_params = rows.map {|row|
     {
-      'jis_code'             => row.jis_code            ,
+      'prefecture_jis_code'  => row.prefecture_jis_code            ,
+      'city_jis_code'        => row.city_jis_code            ,
       'zip_code'             => row.zip_code            ,
       'prefecture_name_kana' => row.prefecture_name_kana,
       'city_name_kana'       => row.city_name_kana      ,
