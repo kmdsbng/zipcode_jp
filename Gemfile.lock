@@ -1,0 +1,23 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    coderay (1.1.1)
+    method_source (0.8.2)
+    mini_portile2 (2.1.0)
+    nokogiri (1.6.8.1)
+      mini_portile2 (~> 2.1.0)
+    pry (0.10.4)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
+    slop (3.6.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  nokogiri
+  pry
+
+BUNDLED WITH
+   1.15.0

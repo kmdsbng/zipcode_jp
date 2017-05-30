@@ -24,19 +24,19 @@ def main
 
   zip_url = "http://zipcloud.ibsnet.co.jp#{url}"
 
-  system('curl', zip_url, '-o', 'x-ken-all.zip')
+  system('curl', zip_url, '-o', 'tmp/x-ken-all.zip')
 
   unless $?.success?
     raise "curl failed"
   end
 
-  system('unzip', '-o', 'x-ken-all.zip')
+  system('unzip', '-o', 'tmp/x-ken-all.zip', '-d', 'tmp/')
 
-  FileUtils.rm('x-ken-all.zip')
+  FileUtils.rm('tmp/x-ken-all.zip')
 
-  system('git', 'add', '.')
-  system('git', 'commit', '-a', '-m', 'update data')
-  system('git', 'push', 'origin', 'master')
+  #system('git', 'add', '.')
+  #system('git', 'commit', '-a', '-m', 'update data')
+  #system('git', 'push', 'origin', 'master')
 end
 
 case $PROGRAM_NAME
