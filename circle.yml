@@ -5,4 +5,4 @@ machine:
 test:
   post:
     - >
-      bundle exec ruby update_data.rb
+      bundle exec ruby scripts/update_data.rb

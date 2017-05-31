@@ -3,6 +3,7 @@ require 'open-uri'
 require 'nokogiri'
 require 'pry'
 require 'fileutils'
+require 'digest/sha2'
 
 def main
   charset = nil
@@ -30,6 +31,14 @@ def main
   end
 
   system('unzip', '-o', 'tmp/x-ken-all.zip', '-d', 'tmp/')
+
+  unless File.exists?('tmp/x-ken-all.csv')
+    raise "tmp/x-ken-all.csv not exists"
+  end
+
+  puts OpenSSL::Digest::SHA256.hexdigest(File.read('tmp/x-ken-all.csv'))
+  puts OpenSSL::Digest::SHA256.hexdigest(File.read('./x-ken-all.csv'))
+
 
   FileUtils.rm('tmp/x-ken-all.zip')
 
