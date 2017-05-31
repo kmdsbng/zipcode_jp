@@ -4,6 +4,7 @@ require 'nokogiri'
 require 'pry'
 require 'fileutils'
 require 'digest/sha2'
+require './parse_csv_and_generate_json'
 
 def main
   charset = nil
@@ -36,9 +37,13 @@ def main
     raise "tmp/x-ken-all.csv not exists"
   end
 
-  puts Digest::SHA256.hexdigest(File.read('tmp/x-ken-all.csv'))
-  puts Digest::SHA256.hexdigest(File.read('./x-ken-all.csv'))
+  new_hash = Digest::SHA256.hexdigest(File.read('tmp/x-ken-all.csv'))
+  old_hash = Digest::SHA256.hexdigest(File.read('./x-ken-all.csv'))
 
+  if new_hash != old_hash
+    main(ARGV[0], ARGV[1])
+
+  end
 
   FileUtils.rm('tmp/x-ken-all.zip')
 
