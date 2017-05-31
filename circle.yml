@@ -5,4 +5,16 @@ machine:
 test:
   post:
     - >
-      bundle exec ruby scripts/update_data.rb
+      if [ -n "${UPDATE_DATA}" -a "${CIRCLE_BRANCH}" = 'master' ] ; then
+        bundle exec ruby scripts/update_data.rb
+      fi
+
+deployment:
+  update-data:
+    branch: master
+    commands:
+      - >
+        if [ -n "${UPDATE_DATA}" ] ; then
+          #bash scripts/create_pull_request_if_needed.sh
+        fi
+
