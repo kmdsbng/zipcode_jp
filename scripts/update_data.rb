@@ -36,8 +36,8 @@ def main
     raise "tmp/x-ken-all.csv not exists"
   end
 
-  puts OpenSSL::Digest::SHA256.hexdigest(File.read('tmp/x-ken-all.csv'))
-  puts OpenSSL::Digest::SHA256.hexdigest(File.read('./x-ken-all.csv'))
+  puts Digest::SHA256.hexdigest(File.read('tmp/x-ken-all.csv'))
+  puts Digest::SHA256.hexdigest(File.read('./x-ken-all.csv'))
 
 
   FileUtils.rm('tmp/x-ken-all.zip')
