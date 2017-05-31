@@ -4,9 +4,33 @@ require 'nokogiri'
 require 'pry'
 require 'fileutils'
 require 'digest/sha2'
-require './parse_csv_and_generate_json'
+require File.expand_path(File.dirname(__FILE__) + '/parse_csv_and_generate_json')
 
 def main
+  download_x_ken_all_csv
+
+  unless File.exists?('tmp/x-ken-all.csv')
+    raise "tmp/x-ken-all.csv not exists"
+  end
+
+  new_hash = Digest::SHA256.hexdigest(File.read('tmp/x-ken-all.csv'))
+  old_hash = Digest::SHA256.hexdigest(File.read('./x-ken-all.csv'))
+
+  if new_hash != old_hash
+    puts "x-ken-all.csv is updated. replace it."
+    FileUtils.mv('tmp/x-ken-all.csv', './x-ken-all.csv')
+    puts "generate json file."
+    ParseCsvAndGenerateJson.new.main('./x-ken-all.csv', './docs')
+  else
+    puts "x-ken-all.csv not updated."
+  end
+
+  #system('git', 'add', '.')
+  #system('git', 'commit', '-a', '-m', 'update data')
+  #system('git', 'push', 'origin', 'master')
+end
+
+def download_x_ken_all_csv
   charset = nil
   html = open('http://zipcloud.ibsnet.co.jp/') {|f|
     charset = f.charset
@@ -14,7 +38,7 @@ def main
   }
 
   doc = Nokogiri::HTML.parse(html, nil, charset)
-  
+
   dl_entry_node = doc.xpath('//div[@class="dlEntry"]')[2]
   url = dl_entry_node.css('div[class="dlButton"] a').attribute('href').value
   puts url
@@ -32,24 +56,6 @@ def main
   end
 
   system('unzip', '-o', 'tmp/x-ken-all.zip', '-d', 'tmp/')
-
-  unless File.exists?('tmp/x-ken-all.csv')
-    raise "tmp/x-ken-all.csv not exists"
-  end
-
-  new_hash = Digest::SHA256.hexdigest(File.read('tmp/x-ken-all.csv'))
-  old_hash = Digest::SHA256.hexdigest(File.read('./x-ken-all.csv'))
-
-  if new_hash != old_hash
-    main(ARGV[0], ARGV[1])
-
-  end
-
-  FileUtils.rm('tmp/x-ken-all.zip')
-
-  #system('git', 'add', '.')
-  #system('git', 'commit', '-a', '-m', 'update data')
-  #system('git', 'push', 'origin', 'master')
 end
 
 case $PROGRAM_NAME
