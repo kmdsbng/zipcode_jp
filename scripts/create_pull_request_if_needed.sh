@@ -5,7 +5,7 @@ if [ "$?" -eq 0 ] ; then
   git config --global user.email kameda.sbng@gmail.com
   git config --global user.name 'CircleCI'
   git add docs
-  git commit -m 'Update data'
+  git commit -a -m 'Update data'
   git branch -M $BRANCH
   git push origin $BRANCH
   bundle exec ruby scripts/create_pull_request.rb
