@@ -31,9 +31,12 @@ docs/
 
 <script type="text/javascript">
   ZipCodeJp.setZipCodeBaseUrl('https://your.api.server/zip_code');
-  ZipCodeJp.getAddressesOfZipCode('6000000', function(err, res) {console.log(err); console.log(res)});
+  ZipCodeJp.getAddressesOfZipCode('6000000', function(err, addresses) {console.log(err); console.log(addresses)});
 </script>
 ```
+
+## Demo
+https://jsfiddle.net/kmdsbng/ntLcdxtz/
 
 ## License
 MIT
