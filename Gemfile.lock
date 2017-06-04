@@ -1,15 +1,26 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    addressable (2.5.1)
+      public_suffix (~> 2.0, >= 2.0.2)
     coderay (1.1.1)
+    faraday (0.12.1)
+      multipart-post (>= 1.2, < 3)
     method_source (0.8.2)
     mini_portile2 (2.1.0)
+    multipart-post (2.0.0)
     nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
+    octokit (4.7.0)
+      sawyer (~> 0.8.0, >= 0.5.3)
     pry (0.10.4)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    public_suffix (2.0.5)
+    sawyer (0.8.1)
+      addressable (>= 2.3.5, < 2.6)
+      faraday (~> 0.8, < 1.0)
     slop (3.6.0)
 
 PLATFORMS
@@ -17,6 +28,7 @@ PLATFORMS
 
 DEPENDENCIES
   nokogiri
+  octokit
   pry
 
 BUNDLED WITH
