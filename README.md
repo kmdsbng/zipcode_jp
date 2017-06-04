@@ -1,5 +1,7 @@
 # zipcode_jp
 
+[![CircleCI](https://circleci.com/gh/kmdsbng/zipcode_jp.svg?style=svg)](https://circleci.com/gh/kmdsbng/zipcode_jp)
+
 zipcode_jp provides Japan zip code database/API that is build by JSON file structure.
 You can setup your own database/API on your Web storage.
 
