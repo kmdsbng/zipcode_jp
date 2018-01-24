@@ -80,6 +80,30 @@ class ParseCsvAndGenerateJson
     end
   end
 
+  class CityRow < Struct.new(
+    :city_jis_code, :prefecture_name_kana, :city_name_kana, :prefecture_name, :city_name)
+
+    class << self
+      def build_from_zip_code_row(zip_code_row)
+        CityRow.new(
+          zip_code_row.city_jis_code,
+          zip_code_row.prefecture_name_kana,
+          zip_code_row.city_name_kana,
+          zip_code_row.prefecture_name,
+          zip_code_row.city_name)
+      end
+    end
+
+    def initialize(*argv)
+      super
+      freeze
+    end
+
+    def prefecture_jis_code
+      city_jis_code[0..1]
+    end
+  end
+
   def main(filename, data_dir)
     rows = load_zip_code_rows(filename)
     rows = rows.sort_by {|row| [row.zip_code.to_s, row.prefecture_name_kana.to_s, row.city_name_kana.to_s, row.town_name_kana.to_s, row.prefecture_name.to_s, row.city_name.to_s, row.town_name.to_s]}
@@ -89,6 +113,7 @@ class ParseCsvAndGenerateJson
 
     rows_hash = rows.group_by(&:zip_code_vo)
 
+    # generate zip_code json
     zip_code_dir = Pathname.new(data_dir) + 'zip_code'
     FileUtils.rm_rf(zip_code_dir, secure: true)
 
@@ -96,17 +121,38 @@ class ParseCsvAndGenerateJson
       json = make_zip_json(rows_of_zip_code)
       write_json_to_file(zip_json_path(zip_code_dir, zip_code_vo), json)
     }
+
+    generate_city_json(filename, data_dir, rows)
+  end
+
+  def generate_city_json(filename, data_dir, rows)
+    city_rows_unsorted = rows.map {|row| CityRow.build_from_zip_code_row(row)}.uniq
+    city_rows = city_rows_unsorted.sort_by {|city_row| [city_row.prefecture_name_kana.to_s, city_row.city_name_kana.to_s, city_row.prefecture_name.to_s, city_row.city_name.to_s]}
+    puts city_rows.size
+    city_rows_hash = rows.group_by(&:prefecture_jis_code)
+
+    city_dir = Pathname.new(data_dir) + 'city'
+    FileUtils.rm_rf(city_dir, secure: true)
+
+    city_rows_hash.each {|prefecture_jis_code, city_rows_of_prefecture|
+      json = make_city_json(city_rows_of_prefecture)
+      write_json_to_file(city_json_path(city_dir, prefecture_jis_code), json)
+    }
   end
 
   def zip_json_path(zip_code_dir, zip_code_vo)
     zip_code_dir + zip_code_vo.zip_code_prefix + "#{zip_code_vo.zip_code}.json"
   end
 
+  def city_json_path(city_dir, prefecture_jis_code)
+    city_dir + "#{prefecture_jis_code}.json"
+  end
+
   def make_zip_json(rows)
     zip_code_params = rows.map {|row|
       {
-        'prefecture_jis_code'  => row.prefecture_jis_code            ,
-        'city_jis_code'        => row.city_jis_code            ,
+        'prefecture_jis_code'  => row.prefecture_jis_code ,
+        'city_jis_code'        => row.city_jis_code       ,
         'zip_code'             => row.zip_code            ,
         'prefecture_name_kana' => row.prefecture_name_kana,
         'city_name_kana'       => row.city_name_kana      ,
@@ -117,6 +163,20 @@ class ParseCsvAndGenerateJson
       }
     }
     JSON.dump(zip_code_params)
+  end
+
+  def make_city_json(city_rows)
+    city_params = city_rows.map {|city_row|
+      {
+        'prefecture_jis_code'  => city_row.prefecture_jis_code ,
+        'city_jis_code'        => city_row.city_jis_code       ,
+        'prefecture_name_kana' => city_row.prefecture_name_kana,
+        'city_name_kana'       => city_row.city_name_kana      ,
+        'prefecture_name'      => city_row.prefecture_name     ,
+        'city_name'            => city_row.city_name           ,
+      }
+    }
+    JSON.dump(city_params)
   end
 
   def write_json_to_file(json_path, json)
