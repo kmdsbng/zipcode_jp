@@ -11,7 +11,8 @@
   "license": "MIT",
   "dependencies": {
     "superagent": "^3.5.2",
-    "webpack": "^2.6.1"
+    "webpack": "^2.6.1",
+    "zeropad": "^1.1.0"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
