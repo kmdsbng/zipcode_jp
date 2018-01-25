@@ -122,14 +122,14 @@ class ParseCsvAndGenerateJson
       write_json_to_file(zip_json_path(zip_code_dir, zip_code_vo), json)
     }
 
-    generate_city_json(filename, data_dir, rows)
+    generate_city_json(data_dir, rows)
   end
 
-  def generate_city_json(filename, data_dir, rows)
-    city_rows_unsorted = rows.map {|row| CityRow.build_from_zip_code_row(row)}.uniq
+  def generate_city_json(data_dir, rows)
+    city_rows_unsorted = rows.map {|row| CityRow.build_from_zip_code_row(row)}.uniq {|city_row| city_row.city_jis_code}
     city_rows = city_rows_unsorted.sort_by {|city_row| [city_row.prefecture_name_kana.to_s, city_row.city_name_kana.to_s, city_row.prefecture_name.to_s, city_row.city_name.to_s]}
     puts city_rows.size
-    city_rows_hash = rows.group_by(&:prefecture_jis_code)
+    city_rows_hash = city_rows.group_by(&:prefecture_jis_code)
 
     city_dir = Pathname.new(data_dir) + 'city'
     FileUtils.rm_rf(city_dir, secure: true)
