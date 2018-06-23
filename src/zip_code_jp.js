@@ -50,9 +50,12 @@ ZipCodeJp.getCitiesOfPrefecture = (prefectureJisCode, cb) => {
     });
 }
 
-ZipCodeJp.getTownsOfCity = (prefectureJisCode, cityJisCode, cb) => {
+ZipCodeJp.getTownsOfCity = (orgCityJisCode, cb) => {
+  const cityJisCode = zeropad(orgCityJisCode, 5);
+  const prefectureJisCode = cityJisCode.slice(0, 2);
+
   request
-    .get(`${ZipCodeJp.town_base_url}/${zeropad(prefectureJisCode, 2)}/${zeropad(cityJisCode, 5)}.json`)
+    .get(`${ZipCodeJp.town_base_url}/${prefectureJisCode}/${cityJisCode}.json`)
     .end((err, res) => {
       if (err) {
         if (err.status === 404) {

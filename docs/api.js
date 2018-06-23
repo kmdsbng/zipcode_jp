@@ -140,8 +140,11 @@ ZipCodeJp.getCitiesOfPrefecture = function (prefectureJisCode, cb) {
   });
 };
 
-ZipCodeJp.getTownsOfCity = function (prefectureJisCode, cityJisCode, cb) {
-  request.get(ZipCodeJp.town_base_url + '/' + zeropad(prefectureJisCode, 2) + '/' + zeropad(cityJisCode, 5) + '.json').end(function (err, res) {
+ZipCodeJp.getTownsOfCity = function (orgCityJisCode, cb) {
+  var cityJisCode = zeropad(orgCityJisCode, 5);
+  var prefectureJisCode = cityJisCode.slice(0, 2);
+
+  request.get(ZipCodeJp.town_base_url + '/' + prefectureJisCode + '/' + cityJisCode + '.json').end(function (err, res) {
     if (err) {
       if (err.status === 404) {
         cb(null, []);
