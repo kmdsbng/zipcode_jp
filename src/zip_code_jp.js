@@ -11,6 +11,10 @@ ZipCodeJp.setCityBaseUrl = (url) => {
   ZipCodeJp.city_base_url = url;
 };
 
+ZipCodeJp.setTownBaseUrl = (url) => {
+  ZipCodeJp.town_base_url = url;
+};
+
 // zipCode: zip code string.
 // cb : (err, addresses) => {...}
 ZipCodeJp.getAddressesOfZipCode = (zipCode, cb) => {
@@ -46,7 +50,24 @@ ZipCodeJp.getCitiesOfPrefecture = (prefectureJisCode, cb) => {
     });
 }
 
+ZipCodeJp.getTownsOfCity = (prefectureJisCode, cityJisCode, cb) => {
+  request
+    .get(`${ZipCodeJp.town_base_url}/${zeropad(prefectureJisCode, 2)}/${zeropad(cityJisCode, 5)}.json`)
+    .end((err, res) => {
+      if (err) {
+        if (err.status === 404) {
+          cb(null, []);
+        } else {
+          cb(err, []);
+        }
+      } else {
+        cb(null, res.body);
+      }
+    });
+}
+
 ZipCodeJp.setZipCodeBaseUrl('/zip_code');
 ZipCodeJp.setCityBaseUrl('/city');
+ZipCodeJp.setTownBaseUrl('/town');
 module.exports = ZipCodeJp;
 
