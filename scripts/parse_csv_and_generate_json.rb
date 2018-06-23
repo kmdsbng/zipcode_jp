@@ -164,7 +164,9 @@ class ParseCsvAndGenerateJson
   end
 
   def generate_town_json(data_dir, rows)
-    town_rows_unsorted = rows.map {|row| TownRow.build_from_zip_code_row(row)}.uniq {|town_row| town_row.town_name}
+    town_rows_unsorted = rows.map {|row| TownRow.build_from_zip_code_row(row)}.
+      reject {|town_row| town_row.town_name == ""}.
+      uniq {|town_row| [town_row.city_jis_code, town_row.town_name]}
     town_rows = town_rows_unsorted.sort_by {|town_row|
       [
         town_row.city_jis_code.to_s,
