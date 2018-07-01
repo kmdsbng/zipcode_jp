@@ -36,7 +36,7 @@ docs/
 ```
 
 ## Demo
-https://jsfiddle.net/kmdsbng/jxratmsL/2/
+https://jsfiddle.net/kmdsbng/f18t60yj/12/
 
 ## License
 MIT
