@@ -80,6 +80,26 @@ class ParseCsvAndGenerateJson
     end
   end
 
+  class PrefectureRow < Struct.new(
+    :prefecture_jis_code, :prefecture_name_kana, :prefecture_name)
+
+    class << self
+      def build_from_zip_code_row(zip_code_row)
+        prefecture_jis_code = zip_code_row.city_jis_code[0..1]
+
+        PrefectureRow.new(
+          prefecture_jis_code,
+          zip_code_row.prefecture_name_kana,
+          zip_code_row.prefecture_name)
+      end
+    end
+
+    def initialize(*argv)
+      super
+      freeze
+    end
+  end
+
   class CityRow < Struct.new(
     :city_jis_code, :prefecture_name_kana, :city_name_kana, :prefecture_name, :city_name)
 
@@ -144,9 +164,25 @@ class ParseCsvAndGenerateJson
       write_json_to_file(zip_json_path(zip_code_dir, zip_code_vo), json)
     }
 
+    generate_prefecture_json(data_dir, rows)
     generate_city_json(data_dir, rows)
     generate_town_json(data_dir, rows)
   end
+
+  def generate_prefecture_json(data_dir, rows)
+    prefecture_rows_unsorted = rows.map {|row| PrefectureRow.build_from_zip_code_row(row)}.
+      reject {|prefecture_row| prefecture_row.prefecture_jis_code == ""}.
+      uniq {|prefecture_row| prefecture_row.prefecture_jis_code}
+    prefecture_rows = prefecture_rows_unsorted.sort_by {|prefecture_row|
+      prefecture_row.prefecture_jis_code.to_i
+    }
+
+    base_dir = Pathname.new(data_dir)
+
+    json = make_prefecture_json(prefecture_rows)
+    write_json_to_file(prefecture_json_path(base_dir), json)
+  end
+
 
   def generate_city_json(data_dir, rows)
     city_rows_unsorted = rows.map {|row| CityRow.build_from_zip_code_row(row)}.uniq {|city_row| city_row.city_jis_code}
@@ -187,6 +223,10 @@ class ParseCsvAndGenerateJson
 
   def zip_json_path(zip_code_dir, zip_code_vo)
     zip_code_dir + zip_code_vo.zip_code_prefix + "#{zip_code_vo.zip_code}.json"
+  end
+
+  def prefecture_json_path(base_dir)
+    base_dir + "prefecture.json"
   end
 
   def city_json_path(city_dir, prefecture_jis_code)
@@ -238,6 +278,17 @@ class ParseCsvAndGenerateJson
       }
     }
     JSON.dump(town_params)
+  end
+
+  def make_prefecture_json(prefecture_rows)
+    prefecture_params = prefecture_rows.map {|prefecture_row|
+      {
+        'prefecture_jis_code'  => prefecture_row.prefecture_jis_code ,
+        'prefecture_name_kana' => prefecture_row.prefecture_name_kana,
+        'prefecture_name'      => prefecture_row.prefecture_name     ,
+      }
+    }
+    JSON.dump(prefecture_params)
   end
 
 

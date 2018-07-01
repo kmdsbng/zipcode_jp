@@ -105,15 +105,50 @@ ZipCodeJp.setCityBaseUrl = function (url) {
   ZipCodeJp.city_base_url = url;
 };
 
-ZipCodeJp.setTownBaseUrl = function (url) {
-  ZipCodeJp.town_base_url = url;
+ZipCodeJp.setRootUrl = function (url) {
+  ZipCodeJp.root_url = url;
+};
+
+ZipCodeJp.getRootUrl = function (url) {
+  var root_url = ZipCodeJp.root_url || "";
+  if (root_url == "") {
+    return "";
+  }
+  if (root_url[root_url.length - 1] == "/") {
+    return root_url;
+  }
+  return root_url + "/";
+};
+
+ZipCodeJp.getZipCodeBaseUrl = function (url) {
+  if (ZipCodeJp.zip_code_base_url != null) {
+    return ZipCodeJp.zip_code_base_url;
+  } else {
+    return ZipCodeJp.getRootUrl() + "zip_code";
+  }
+};
+
+ZipCodeJp.getCityBaseUrl = function (url) {
+  if (ZipCodeJp.city_base_url != null) {
+    return ZipCodeJp.city_base_url;
+  } else {
+    return ZipCodeJp.getRootUrl() + "city";
+  }
+};
+
+ZipCodeJp.getTownBaseUrl = function (url) {
+  return ZipCodeJp.getRootUrl() + "town";
+};
+
+ZipCodeJp.getPrefectureJsonUrl = function (url) {
+  return ZipCodeJp.getRootUrl() + "prefecture.json";
 };
 
 // zipCode: zip code string.
 // cb : (err, addresses) => {...}
 ZipCodeJp.getAddressesOfZipCode = function (zipCode, cb) {
   var prefix = zipCode.slice(0, 3);
-  request.get(ZipCodeJp.zip_code_base_url + '/' + prefix + '/' + zipCode + '.json').end(function (err, res) {
+  request.get(ZipCodeJp.getZipCodeBaseUrl() + '/' + prefix + '/' + zipCode + '.json').end(function (err, res) {
     if (err) {
       if (err.status === 404) {
         cb(null, []);
@@ -127,7 +162,7 @@ ZipCodeJp.getAddressesOfZipCode = function (zipCode, cb) {
 };
 
 ZipCodeJp.getCitiesOfPrefecture = function (prefectureJisCode, cb) {
-  request.get(ZipCodeJp.city_base_url + '/' + zeropad(prefectureJisCode, 2) + '.json').end(function (err, res) {
+  request.get(ZipCodeJp.getCityBaseUrl() + '/' + zeropad(prefectureJisCode, 2) + '.json').end(function (err, res) {
     if (err) {
       if (err.status === 404) {
         cb(null, []);
@@ -144,7 +179,7 @@ ZipCodeJp.getTownsOfCity = function (orgCityJisCode, cb) {
   var cityJisCode = zeropad(orgCityJisCode, 5);
   var prefectureJisCode = cityJisCode.slice(0, 2);
 
-  request.get(ZipCodeJp.town_base_url + '/' + prefectureJisCode + '/' + cityJisCode + '.json').end(function (err, res) {
+  request.get(ZipCodeJp.getTownBaseUrl() + '/' + prefectureJisCode + '/' + cityJisCode + '.json').end(function (err, res) {
     if (err) {
       if (err.status === 404) {
         cb(null, []);
@@ -157,9 +192,24 @@ ZipCodeJp.getTownsOfCity = function (orgCityJisCode, cb) {
   });
 };
 
-ZipCodeJp.setZipCodeBaseUrl('/zip_code');
-ZipCodeJp.setCityBaseUrl('/city');
-ZipCodeJp.setTownBaseUrl('/town');
+ZipCodeJp.getPrefectures = function (cb) {
+  request.get('' + ZipCodeJp.getPrefectureJsonUrl()).end(function (err, res) {
+    if (err) {
+      if (err.status === 404) {
+        cb(null, []);
+      } else {
+        cb(err, []);
+      }
+    } else {
+      cb(null, res.body);
+    }
+  });
+};
+
+//ZipCodeJp.setZipCodeBaseUrl('/zip_code');
+//ZipCodeJp.setCityBaseUrl('/city');
+//ZipCodeJp.setTownBaseUrl('/town');
+ZipCodeJp.setRootUrl('/');
 module.exports = ZipCodeJp;
 
 /***/ }),
