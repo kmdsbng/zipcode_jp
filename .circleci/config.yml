@@ -1,0 +1,25 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: circleci/ruby:2.4.1-jessie
+    steps:
+      - checkout
+      - run: bundle exec ruby scripts/update_data.rb
+      - run: bash scripts/create_pull_request_if_needed.sh
+
+workflows:
+  version: 2
+  scheduled-workflow:
+    triggers:
+      - schedule:
+          cron: "0 1 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - build
+
+
