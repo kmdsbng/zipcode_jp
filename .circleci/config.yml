@@ -6,6 +6,7 @@ jobs:
       - image: circleci/ruby:2.4.1-jessie
     steps:
       - checkout
+      - run: bundle install
       - run: bundle exec ruby scripts/update_data.rb
       - run: bash scripts/create_pull_request_if_needed.sh
 
