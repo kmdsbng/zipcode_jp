@@ -125,14 +125,15 @@ class ParseCsvAndGenerateJson
   end
 
   class TownRow < Struct.new(
-    :city_jis_code, :town_name_kana, :town_name)
+    :city_jis_code, :town_name_kana, :town_name, :zip_code)
 
     class << self
       def build_from_zip_code_row(zip_code_row)
         TownRow.new(
           zip_code_row.city_jis_code,
           zip_code_row.town_name_kana,
-          zip_code_row.town_name)
+          zip_code_row.town_name,
+          zip_code_row.zip_code)
       end
     end
 
@@ -275,6 +276,7 @@ class ParseCsvAndGenerateJson
         'city_jis_code'        => town_row.city_jis_code       ,
         'town_name_kana'       => town_row.town_name_kana      ,
         'town_name'            => town_row.town_name           ,
+        'zip_code'             => town_row.zip_code            ,
       }
     }
     JSON.dump(town_params)
