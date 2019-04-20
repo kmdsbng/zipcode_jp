@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "update_data_version": "sh scripts/update_data_version.sh",
     "build": "$(npm bin)/webpack --config=webpack.config.js",
     "test": "mocha"
   },
