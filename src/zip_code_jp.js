@@ -1,7 +1,8 @@
 const request = require('superagent');
 const zeropad = require('zeropad');
+const ZipCodeDataVersion = require('./zip_code_data_version.js');
 
-const ZipCodeJp = {}
+const ZipCodeJp = {};
 
 ZipCodeJp.setZipCodeBaseUrl = (url) => {
   ZipCodeJp.zip_code_base_url = url;
@@ -47,7 +48,7 @@ ZipCodeJp.getTownBaseUrl = (url) => {
 }
 
 ZipCodeJp.getPrefectureJsonUrl = (url) => {
-  return ZipCodeJp.getRootUrl() + "prefecture.json";
+  return ZipCodeJp.getRootUrl() + "prefecture.json?version=${ZipCodeDataVersion}";
 }
 
 // zipCode: zip code string.
@@ -55,7 +56,7 @@ ZipCodeJp.getPrefectureJsonUrl = (url) => {
 ZipCodeJp.getAddressesOfZipCode = (zipCode, cb) => {
   const prefix = zipCode.slice(0, 3);
   request
-    .get(`${ZipCodeJp.getZipCodeBaseUrl()}/${prefix}/${zipCode}.json`)
+    .get(`${ZipCodeJp.getZipCodeBaseUrl()}/${prefix}/${zipCode}.json?version=${ZipCodeDataVersion}`)
     .end((err, res) => {
       if (err) {
         if (err.status === 404) {
@@ -71,7 +72,7 @@ ZipCodeJp.getAddressesOfZipCode = (zipCode, cb) => {
 
 ZipCodeJp.getCitiesOfPrefecture = (prefectureJisCode, cb) => {
   request
-    .get(`${ZipCodeJp.getCityBaseUrl()}/${zeropad(prefectureJisCode, 2)}.json`)
+    .get(`${ZipCodeJp.getCityBaseUrl()}/${zeropad(prefectureJisCode, 2)}.json?version=${ZipCodeDataVersion}`)
     .end((err, res) => {
       if (err) {
         if (err.status === 404) {
@@ -90,7 +91,7 @@ ZipCodeJp.getTownsOfCity = (orgCityJisCode, cb) => {
   const prefectureJisCode = cityJisCode.slice(0, 2);
 
   request
-    .get(`${ZipCodeJp.getTownBaseUrl()}/${prefectureJisCode}/${cityJisCode}.json`)
+    .get(`${ZipCodeJp.getTownBaseUrl()}/${prefectureJisCode}/${cityJisCode}.json?version=${ZipCodeDataVersion}`)
     .end((err, res) => {
       if (err) {
         if (err.status === 404) {

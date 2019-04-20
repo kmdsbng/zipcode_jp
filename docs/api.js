@@ -92,8 +92,9 @@ module.exports = isObject;
 "use strict";
 
 
-var request = __webpack_require__(5);
-var zeropad = __webpack_require__(11);
+var request = __webpack_require__(6);
+var zeropad = __webpack_require__(12);
+var ZipCodeDataVersion = __webpack_require__(3);
 
 var ZipCodeJp = {};
 
@@ -141,14 +142,14 @@ ZipCodeJp.getTownBaseUrl = function (url) {
 };
 
 ZipCodeJp.getPrefectureJsonUrl = function (url) {
-  return ZipCodeJp.getRootUrl() + "prefecture.json";
+  return ZipCodeJp.getRootUrl() + "prefecture.json?version=${ZipCodeDataVersion}";
 };
 
 // zipCode: zip code string.
 // cb : (err, addresses) => {...}
 ZipCodeJp.getAddressesOfZipCode = function (zipCode, cb) {
   var prefix = zipCode.slice(0, 3);
-  request.get(ZipCodeJp.getZipCodeBaseUrl() + '/' + prefix + '/' + zipCode + '.json').end(function (err, res) {
+  request.get(ZipCodeJp.getZipCodeBaseUrl() + '/' + prefix + '/' + zipCode + '.json?version=' + ZipCodeDataVersion).end(function (err, res) {
     if (err) {
       if (err.status === 404) {
         cb(null, []);
@@ -162,7 +163,7 @@ ZipCodeJp.getAddressesOfZipCode = function (zipCode, cb) {
 };
 
 ZipCodeJp.getCitiesOfPrefecture = function (prefectureJisCode, cb) {
-  request.get(ZipCodeJp.getCityBaseUrl() + '/' + zeropad(prefectureJisCode, 2) + '.json').end(function (err, res) {
+  request.get(ZipCodeJp.getCityBaseUrl() + '/' + zeropad(prefectureJisCode, 2) + '.json?version=' + ZipCodeDataVersion).end(function (err, res) {
     if (err) {
       if (err.status === 404) {
         cb(null, []);
@@ -179,7 +180,7 @@ ZipCodeJp.getTownsOfCity = function (orgCityJisCode, cb) {
   var cityJisCode = zeropad(orgCityJisCode, 5);
   var prefectureJisCode = cityJisCode.slice(0, 2);
 
-  request.get(ZipCodeJp.getTownBaseUrl() + '/' + prefectureJisCode + '/' + cityJisCode + '.json').end(function (err, res) {
+  request.get(ZipCodeJp.getTownBaseUrl() + '/' + prefectureJisCode + '/' + cityJisCode + '.json?version=' + ZipCodeDataVersion).end(function (err, res) {
     if (err) {
       if (err.status === 404) {
         cb(null, []);
@@ -223,6 +224,16 @@ window.ZipCodeJp = __webpack_require__(1);
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var ZipCodeDataVersion = '20190420';
+module.exports = ZipCodeDataVersion;
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -391,7 +402,7 @@ Emitter.prototype.hasListeners = function(event){
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -402,7 +413,7 @@ module.exports = function (x) {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -419,12 +430,12 @@ if (typeof window !== 'undefined') { // Browser window
   root = this;
 }
 
-var Emitter = __webpack_require__(3);
-var RequestBase = __webpack_require__(7);
+var Emitter = __webpack_require__(4);
+var RequestBase = __webpack_require__(8);
 var isObject = __webpack_require__(0);
-var isFunction = __webpack_require__(6);
-var ResponseBase = __webpack_require__(8);
-var shouldRetry = __webpack_require__(9);
+var isFunction = __webpack_require__(7);
+var ResponseBase = __webpack_require__(9);
+var shouldRetry = __webpack_require__(10);
 
 /**
  * Noop.
@@ -1341,7 +1352,7 @@ request.put = function(url, data, fn){
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -1362,7 +1373,7 @@ module.exports = isFunction;
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -1959,7 +1970,7 @@ RequestBase.prototype._setTimeouts = function() {
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -1967,7 +1978,7 @@ RequestBase.prototype._setTimeouts = function() {
  * Module dependencies.
  */
 
-var utils = __webpack_require__(10);
+var utils = __webpack_require__(11);
 
 /**
  * Expose `ResponseBase`.
@@ -2098,7 +2109,7 @@ ResponseBase.prototype._setStatusProperties = function(status){
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports) {
 
 var ERROR_CODES = [
@@ -2127,7 +2138,7 @@ module.exports = function shouldRetry(err, res) {
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports) {
 
 
@@ -2200,12 +2211,12 @@ exports.cleanHeader = function(header, shouldStripCookie){
 };
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var isNegativeZero = __webpack_require__(4);
+var isNegativeZero = __webpack_require__(5);
 
 module.exports = function(number, length) {
     if (isNaN(number)) {
