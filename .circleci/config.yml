@@ -8,19 +8,6 @@ jobs:
       - checkout
       - run: bundle install
       - run: bundle exec ruby scripts/update_data.rb
-      - run: bash scripts/update_data_version.sh
-
-  build_data:
-    docker:
-      - image: circleci/node:8.16.0-jessie
-    steps:
-      - run: npm install
-      - run: npm run build
-
-  create_pull_request_if_needed:
-    docker:
-      - image: circleci/ruby:2.4.1-jessie
-    steps:
       - run: bash scripts/create_pull_request_if_needed.sh
 
 workflows:
