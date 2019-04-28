@@ -22,7 +22,5 @@ workflows:
                 - master
     jobs:
       - build_data
-      - build_js
-      - create_pull_request_if_needed
 
 
