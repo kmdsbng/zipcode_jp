@@ -32,10 +32,18 @@ docs/
 <script type="text/javascript">
   ZipCodeJp.setZipCodeBaseUrl('https://your.api.server/zip_code');
   ZipCodeJp.getAddressesOfZipCode('6000000', function(err, addresses) {console.log(err); console.log(addresses)});
+  ZipCodeJp.getPrefectures(function(err, prefectures) {console.log(err); console.log(prefectures)});
+  ZipCodeJp.getCitiesOfPrefecture('01',  function(err, cities) {console.log(err); console.log(cities)});
+  ZipCodeJp.getTownsOfCity('01220',  function(err, towns) {console.log(err); console.log(towns)});
 </script>
 ```
 
 ## Demo
+
+Live demo
+https://kmdsbng.github.io/zipcode_jp_react_sample/dist/
+
+jsfiddle
 https://jsfiddle.net/kmdsbng/f18t60yj/12/
 
 ## License
