@@ -85,6 +85,26 @@ ZipCodeJp.getCitiesOfPrefecture = (prefectureJisCode, cb) => {
     });
 }
 
+ZipCodeJp.getCity = (cityJisCode, cb) => {
+  const prefectureJisCode = cityJisCode.slice(0, 2);
+
+  ZipCodeJp.getCitiesOfPrefecture(prefectureJisCode, (err, cities) => {
+    if (err) {
+      cb(err, null);
+    } else {
+      for (const city in cities) {
+        const city = cities[i];
+        if (city.city_jis_code == cityJisCode) {
+          cb(err, city);
+          return;
+        }
+      }
+
+      cb(err, null)
+    }
+  });
+}
+
 ZipCodeJp.getTownsOfCity = (orgCityJisCode, cb) => {
   const cityJisCode = zeropad(orgCityJisCode, 5);
   const prefectureJisCode = cityJisCode.slice(0, 2);
@@ -120,9 +140,9 @@ ZipCodeJp.getPrefectures = (cb) => {
     });
 }
 
-//ZipCodeJp.setZipCodeBaseUrl('/zip_code');
-//ZipCodeJp.setCityBaseUrl('/city');
-//ZipCodeJp.setTownBaseUrl('/town');
+// ZipCodeJp.setZipCodeBaseUrl('/zip_code');
+// ZipCodeJp.setCityBaseUrl('/city');
+// ZipCodeJp.setTownBaseUrl('/town');
 ZipCodeJp.setRootUrl('/');
 module.exports = ZipCodeJp;
 

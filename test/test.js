@@ -37,6 +37,28 @@ describe('ZipCodeJp', () => {
            }
         );
       });
+
+    });
+  });
+
+  describe('#getCity()', () => {
+    it('should return city', () => {
+      ZipCodeJp.getCity(
+        '20220',
+         (err, city) => {
+           assert.equal(true, city != null);
+           assert.equal("安曇野市", city.city_name);
+         }
+      );
+    });
+
+    it('should return null', () => {
+      ZipCodeJp.getCity(
+        '20221',
+         (err, city) => {
+           assert.equal(true, null);
+         }
+      );
     });
   });
 });
