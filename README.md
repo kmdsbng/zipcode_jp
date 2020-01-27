@@ -35,6 +35,7 @@ docs/
   ZipCodeJp.getPrefectures(function(err, prefectures) {console.log(err); console.log(prefectures)});
   ZipCodeJp.getCitiesOfPrefecture('01',  function(err, cities) {console.log(err); console.log(cities)});
   ZipCodeJp.getTownsOfCity('01220',  function(err, towns) {console.log(err); console.log(towns)});
+  ZipCodeJp.getCity('20220',  function(err, city) {console.log(err); console.log(city)});
 </script>
 ```
 
