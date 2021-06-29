@@ -3,7 +3,7 @@ version: 2
 jobs:
   build_data:
     docker:
-      - image: circleci/ruby:2.4.1-jessie
+      - image: cimg/ruby:2.7.3-node
     steps:
       - checkout
       - run: bundle install
