@@ -3,7 +3,7 @@ version: 2
 jobs:
   build_data:
     docker:
-      - image: cimg/ruby:2.7.3-node
+      - image: cimg/ruby:3.2.3-node
     steps:
       - checkout
       - run: bundle install
