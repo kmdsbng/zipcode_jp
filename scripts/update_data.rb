@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 require 'open-uri'
 require 'nokogiri'
-require 'pry'
+# require 'pry'
 require 'fileutils'
 require 'digest/sha2'
 require File.expand_path(File.dirname(__FILE__) + '/parse_csv_and_generate_json')
