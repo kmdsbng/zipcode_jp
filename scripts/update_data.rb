@@ -32,7 +32,7 @@ end
 
 def download_x_ken_all_csv
   charset = nil
-  html = open('http://zipcloud.ibsnet.co.jp/') {|f|
+  html = URI.open('http://zipcloud.ibsnet.co.jp/') {|f|
     charset = f.charset
     f.read
   }
