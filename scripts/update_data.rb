@@ -9,7 +9,7 @@ require File.expand_path(File.dirname(__FILE__) + '/parse_csv_and_generate_json'
 def main
   download_x_ken_all_csv
 
-  unless File.exists?('tmp/x-ken-all.csv')
+  unless File.exist?('tmp/x-ken-all.csv')
     raise "tmp/x-ken-all.csv not exists"
   end
 
